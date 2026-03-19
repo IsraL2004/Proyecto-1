@@ -26,24 +26,29 @@ def malla(m, n, dirigido):
                 identificador += 1
     return grafo
 
-def grafoErdosRenyi(n, m, dirigido):
-    """
-    Recibe parametros de
-    n: nodos
-    m: Numero de aristas
-    Y la direccion del grafo
-    """
+def grafoErdosRenyi(n, m, dirigido=False):
     grafo = Graph(dirigido)
+    # Crear nodos
     for i in range(n):
-        grafo.addNode("nodo_" +str(i)) # Crea n-nodos
-    for j in range(m): # Se repite m veces
-        # Selecciona 2 nodos al hazar
+        grafo.addNode("nodo_" + str(i))
+    aristas = set()  # Para evitar duplicados
+    while len(aristas) < m:
         u = random.randint(0, n - 1)
         v = random.randint(0, n - 1)
-        if u != v: # Si el nodo es distinto crea la arista
-            grafo.addEdge("nodo_"+str(u), "nodo_"+str(v), "Ident" + str(j))
-        else: # Si no que se repita
-            j -= 1
+        if u == v:
+            continue  # evitar loops
+        # Normalizar si no es dirigido
+        if not dirigido:
+            arista = tuple(sorted((u, v)))
+        else:
+            arista = (u, v)
+        if arista not in aristas:
+            aristas.add(arista)
+            grafo.addEdge(
+                "nodo_" + str(arista[0]),
+                "nodo_" + str(arista[1]),
+                "Ident" + str(len(aristas))
+            )
     return grafo
 
 
